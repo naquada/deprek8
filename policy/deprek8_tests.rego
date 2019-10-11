@@ -127,3 +127,44 @@ test_validatingwebhookconfigurations_admissionregistrationk8sio_v1_is_ok {
   msg := warn with input as generate("admissionregistration.k8s.io/v1", "ValidatingWebhookConfiguration")
   count(msg) == 0
 }
+
+
+test_certificates_v1alpha1_is_deny {
+  msg := deny with input as generate("certmanager.k8s.io/v1alpha1", "Certificate")
+  count(msg) == 1
+}
+
+test_issuers_v1alpha1_is_deny {
+  msg := deny with input as generate("certmanager.k8s.io/v1alpha1", "Issuer")
+  count(msg) == 1
+}
+
+test_clusterissuers_v1alpha1_is_deny {
+  msg := deny with input as generate("certmanager.k8s.io/v1alpha1", "ClusterIssuer")
+  count(msg) == 1
+}
+
+test_certificatereuests_v1alpha1_is_deny {
+  msg := deny with input as generate("certmanager.k8s.io/v1alpha1", "CertificateRequest")
+  count(msg) == 1
+}
+
+test_certificates_v1alpha2_is_ok {
+  msg := deny with input as generate("cert-manager.io/v1alpha2", "Certificate")
+  count(msg) == 0
+}
+
+test_issuers_v1alpha2_is_ok {
+  msg := deny with input as generate("cert-manager.io/v1alpha2", "Issuer")
+  count(msg) == 0
+}
+
+test_clusterissuers_v1alpha2_is_ok {
+  msg := deny with input as generate("cert-manager.io/v1alpha2", "ClusterIssuer")
+  count(msg) == 0
+}
+
+test_certificatereuests_v1alpha2_is_ok {
+  msg := deny with input as generate("cert-manager.io/v1alpha2", "CertificateRequest")
+  count(msg) == 0
+}

@@ -168,3 +168,18 @@ test_certificatereuests_v1alpha2_is_ok {
   msg := deny with input as generate("cert-manager.io/v1alpha2", "CertificateRequest")
   count(msg) == 0
 }
+
+test_autoscaling_v1beta1_is_deny {
+  msg := deny with input as generate("autoscaling.k8s.io/v1beta1", "VerticalPodAutoscaler")
+  count(msg) == 1
+}
+
+test_autoscaling_v1beta2_is_warn {
+  msg := warn with input as generate("autoscaling.k8s.io/v1beta2", "VerticalPodAutoscaler")
+  count(msg) == 1
+}
+
+test_autoscaling_v1_is_ok {
+  msg := warn with input as generate("autoscaling.k8s.io/v1", "VerticalPodAutoscaler")
+  count(msg) == 0
+}

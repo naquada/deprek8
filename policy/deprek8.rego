@@ -103,3 +103,18 @@ _deny = msg {
   input.kind == kinds[_]
   msg := sprintf("%s/%s: API certmanager.k8s.io/v1alpha1 for %s is obsolete, use acme.cert-manager.io/v1alpha2 instead.", [input.kind, input.metadata.name, input.kind])
 }
+
+
+# Based on https://github.com/kubernetes/autoscaler/releases/tag/vertical-pod-autoscaler-0.7.0
+
+_deny = msg {
+  apis := ["autoscaling.k8s.io/v1beta1"]
+  input.apiVersion == apis[_]
+  msg := sprintf("%s/%s: API %s is no longer served, use autoscaling.k8s.io/v1 instead.", [input.kind, input.metadata.name, input.apiVersion])
+}
+
+_warn = msg {
+  apis := ["autoscaling.k8s.io/v1beta2"]
+  input.apiVersion == apis[_]
+  msg := sprintf("%s/%s: API %s is deprecated, use autoscaling.k8s.io/v1 instead.", [input.kind, input.metadata.name, input.apiVersion])
+}

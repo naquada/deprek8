@@ -43,6 +43,14 @@ _deny = msg {
   msg := sprintf("%s/%s: API extensions/v1beta1 for %s is no longer served by default, use apps/v1 instead.", [input.kind, input.metadata.name, input.kind])
 }
 
+# HorizontalPodAutoscaler scaleTargetRef references deployment resources under extensions/v1beta1 - use apps/v1 instead
+_deny = msg {
+  input.kind == "HorizontalPodAutoscaler"
+  input.spec.scaleTargetRef.kind == "Deployment"
+  input.spec.scaleTargetRef.apiVersion == "extensions/v1beta1"
+  msg := sprintf("%s/%s: scaleTargetRef references an invalid Deployment API version extensions/v1beta1, use apps/v1 instead.", [input.kind, input.metadata.name])
+}
+
 # networkpolicies resources under extensions/v1beta1 - use networking.k8s.io/v1 instead
 _deny = msg {
   input.apiVersion == "extensions/v1beta1"

@@ -8,6 +8,24 @@ generate(version, kind) = obj {
   }
 }
 
+generateHpa(version, kind) = obj {
+  obj := {
+    "kind": "HorizontalPodAutoscaler",
+    "apiVersion": "autoscaling/v1",
+    "metadata": { "name": "foo" },
+    "spec": {
+      "maxReplicas": 12,
+      "minReplicas": 2,
+      "scaleTargetRef": {
+        "apiVersion": version,
+        "kind": kind,
+        "name": "demo"
+      },
+      "targetCPUUtilizationPercentage": 66
+    }
+  }
+}
+
 test_apps_v1beta1_is_deny {
   msg := deny with input as generate("apps/v1beta1", "foo")
   count(msg) == 1
@@ -40,6 +58,16 @@ test_deployments_extensions_v1beta1_is_deny {
 
 test_deployments_apps_v1_is_ok {
   msg := deny with input as generate("apps/v1", "Deployment")
+  count(msg) == 0
+}
+
+test_hpas_deployments_extensions_v1beta1_is_deny {
+  msg := deny with input as generateHpa("extensions/v1beta1", "Deployment")
+  count(msg) == 1
+}
+
+test_hpas_deployments_apps_v1_is_ok {
+  msg := deny with input as generateHpa("apps/v1", "Deployment")
   count(msg) == 0
 }
 
@@ -168,3 +196,4 @@ test_certificatereuests_v1alpha2_is_ok {
   msg := deny with input as generate("cert-manager.io/v1alpha2", "CertificateRequest")
   count(msg) == 0
 }
+
